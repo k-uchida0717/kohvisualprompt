@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KOH.journey-Studio">
+<meta name="theme-color" content="#05060E">
+<title>KOH.journey-Studio — MV制作管理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05060E; --bg2:#0A0C1A; --panel:#10132A; --panel2:#151934;
+  --line:rgba(255,255,255,.10); --line2:rgba(255,255,255,.06);
+  --tx:#F4F2FA; --mut:#9AA0BC; --mut2:#6E7391;
+  --lav:#B9A7E8; --lav2:#8E74E0;
+  --aurora:linear-gradient(100deg,#6A3DE8 0%,#B14BE0 28%,#E0409B 50%,#F5732E 72%,#F5B14C 100%);
+  --aurora-soft:linear-gradient(100deg,rgba(106,61,232,.20),rgba(224,64,155,.18),rgba(245,115,46,.18));
+  --ok:#57E0A6; --warn:#F5B14C;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--tx);
+  font-family:"Noto Sans JP",system-ui,sans-serif; line-height:1.6;
+  -webkit-font-smoothing:antialiased; letter-spacing:.01em;
+  padding-bottom:76px;
+  background-image:
+    radial-gradient(900px 500px at 82% -8%,rgba(224,64,155,.16),transparent 60%),
+    radial-gradient(800px 520px at 8% 4%,rgba(106,61,232,.18),transparent 60%),
+    radial-gradient(1000px 700px at 60% 120%,rgba(245,140,60,.10),transparent 60%);
+  background-attachment:fixed;
+}
+.wrap{max-width:1160px;margin:0 auto;padding:0 18px}
+.mono{font-family:"Space Grotesk",monospace}
+.lbl{font-family:"Space Grotesk",sans-serif;text-transform:uppercase;letter-spacing:.22em;font-size:11px;color:var(--mut)}
+.grad-text{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- top nav ---------- */
+.nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(5,6,14,.92),rgba(5,6,14,.62));
+  border-bottom:1px solid var(--line2)}
+.nav .wrap{display:flex;align-items:center;gap:14px;height:60px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:17px;letter-spacing:.02em}
+.logo{width:26px;height:26px;border-radius:8px;background:var(--aurora);position:relative;flex:none;
+  box-shadow:0 0 18px rgba(224,64,155,.55)}
+.logo::after{content:"";position:absolute;inset:6px;border:2px solid rgba(255,255,255,.92);border-radius:50%}
+.logo::before{content:"";position:absolute;left:11.5px;top:2px;bottom:2px;width:2px;background:rgba(255,255,255,.92);transform:rotate(0deg)}
+.nav .sp{flex:1}
+.nav .meta{font-size:11px;color:var(--mut);text-align:right;line-height:1.35}
+.nav .meta b{color:var(--tx);font-size:12px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:52px 0 26px;overflow:hidden}
+.hero .kick{display:inline-flex;align-items:center;gap:9px;padding:6px 13px;border:1px solid var(--line);
+  border-radius:100px;background:rgba(255,255,255,.03);font-size:11px;color:var(--lav);margin-bottom:20px}
+.hero .kick .dot{width:7px;height:7px;border-radius:50%;background:var(--aurora);box-shadow:0 0 10px #E0409B}
+.hero h1{font-weight:900;font-size:clamp(34px,7vw,68px);line-height:1.04;margin:0 0 8px;
+  letter-spacing:.01em;text-shadow:0 6px 40px rgba(224,64,155,.28)}
+.hero h1 .en{display:block;font-family:"Space Grotesk";font-weight:700;font-size:clamp(15px,2.4vw,22px);
+  letter-spacing:.32em;color:var(--mut);margin-top:14px;text-shadow:none}
+.hero p.sub{color:var(--mut);max-width:640px;margin:14px 0 0;font-size:15px}
+.hero .ribbon{height:4px;width:220px;background:var(--aurora);border-radius:4px;margin-top:26px;
+  box-shadow:0 0 26px rgba(224,64,155,.5)}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:30px 0 6px}
+.tab{position:relative;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--mut);
+  padding:11px 16px;border-radius:13px;cursor:pointer;font-weight:700;font-size:13.5px;transition:.18s;
+  display:flex;align-items:center;gap:9px}
+.tab:hover{color:var(--tx);border-color:rgba(255,255,255,.22)}
+.tab.on{color:#fff;border-color:transparent;background:var(--panel2)}
+.tab.on::before{content:"";position:absolute;inset:0;padding:1.4px;border-radius:13px;background:var(--aurora);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.tab .cnt{font-family:"Space Grotesk";font-size:11px;color:var(--mut);background:rgba(255,255,255,.06);
+  padding:2px 8px;border-radius:20px}
+.tab.on .cnt{color:var(--lav)}
+.tab.add{border-style:dashed;color:var(--mut2)}
+
+/* ---------- version head ---------- */
+.vhead{margin:22px 0 6px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.vhead .vt{font-weight:900;font-size:clamp(22px,3.6vw,32px);line-height:1.1}
+.vhead .vpart{font-family:"Space Grotesk";letter-spacing:.24em;font-size:11px;color:var(--lav);text-transform:uppercase}
+.vhead .vd{color:var(--mut);font-size:13px;margin-top:6px;max-width:640px}
+
+/* progress */
+.prog{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0 4px}
+.pcard{flex:1;min-width:150px;border:1px solid var(--line);border-radius:15px;padding:14px 16px;background:var(--panel)}
+.pcard .pt{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+.pcard .pt span{font-size:12px;color:var(--mut)}
+.pcard .pt b{font-family:"Space Grotesk";font-size:20px}
+.bar{height:8px;border-radius:8px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar > i{display:block;height:100%;border-radius:8px;background:var(--aurora);width:0;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:22px 0 14px}
+.search{flex:1;min-width:200px;position:relative}
+.search input{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--tx);
+  padding:11px 13px 11px 38px;border-radius:12px;font-size:14px;font-family:inherit;outline:none}
+.search input:focus{border-color:var(--lav2)}
+.search svg{position:absolute;left:12px;top:11px;opacity:.5}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--mut);padding:9px 13px;
+  border-radius:11px;font-size:12.5px;cursor:pointer;font-weight:700;transition:.15s}
+.chip:hover{color:var(--tx)}
+.chip.on{color:#fff;background:var(--aurora-soft);border-color:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+
+/* settings accordion */
+.acc{border:1px solid var(--line);border-radius:16px;background:var(--panel);margin:6px 0 8px;overflow:hidden}
+.acc > summary{cursor:pointer;list-style:none;padding:15px 18px;display:flex;align-items:center;gap:12px;font-weight:700}
+.acc > summary::-webkit-details-marker{display:none}
+.acc > summary .caret{margin-left:auto;transition:.2s;color:var(--mut)}
+.acc[open] > summary .caret{transform:rotate(90deg)}
+.acc .body{padding:4px 18px 18px}
+.block{border:1px solid var(--line2);border-radius:12px;background:var(--bg2);padding:12px 14px;margin:10px 0}
+.block .bh{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.block .bh .bt{font-size:12px;font-weight:700;color:var(--lav)}
+.block .bx{font-size:13px;color:#D8DCF0;white-space:pre-wrap;word-break:break-word}
+
+/* scene card */
+.grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:8px}
+.card{position:relative;border:1px solid var(--line);border-radius:18px;background:
+  linear-gradient(180deg,var(--panel),var(--bg2));overflow:hidden;transition:.2s}
+.card:hover{border-color:rgba(255,255,255,.2)}
+.card .stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--mut2)}
+.card.done .stripe{background:var(--aurora)}
+.card.half .stripe{background:linear-gradient(180deg,#57E0A6,#F5B14C)}
+.card .ch{padding:16px 18px 6px 20px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.sid{font-family:"Space Grotesk";font-weight:700;font-size:12px;letter-spacing:.14em;color:#fff;
+  background:var(--aurora-soft);border:1px solid rgba(255,255,255,.12);padding:5px 10px;border-radius:9px;flex:none}
+.chtitle{flex:1;min-width:200px}
+.chtitle .tt{font-weight:900;font-size:17px;line-height:1.25}
+.chtitle .mt{display:flex;gap:10px;flex-wrap:wrap;margin-top:5px;font-size:11.5px;color:var(--mut);align-items:center}
+.envtag{border:1px solid var(--line);border-radius:20px;padding:3px 10px;color:var(--lav)}
+.statedot{width:9px;height:9px;border-radius:50%;flex:none}
+.cbody{padding:6px 18px 16px 20px}
+.lyric{font-size:13.5px;color:#Cfd3ea;border-left:2px solid var(--lav2);padding:2px 0 2px 12px;margin:8px 0}
+.lyric .en{color:var(--mut);font-style:italic;font-size:12.5px}
+.desc{font-size:13px;color:var(--mut);margin:8px 0 4px}
+
+.pbox{border:1px solid var(--line2);border-radius:12px;background:#0B0E1E;margin:12px 0}
+.pbox .ph{display:flex;align-items:center;gap:9px;padding:9px 12px;border-bottom:1px solid var(--line2)}
+.pbox .ph .tag{font-family:"Space Grotesk";font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.pbox .ph .tag.img{color:#F5B14C}.pbox .ph .tag.vid{color:#B14BE0}
+.pbox .ph .copy{margin-left:auto}
+.pbox pre{margin:0;padding:12px 13px;font-size:12.5px;line-height:1.55;color:#E4E7FA;white-space:pre-wrap;
+  word-break:break-word;font-family:"Space Grotesk",ui-monospace,monospace}
+.btn{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--tx);border-radius:9px;
+  padding:6px 12px;font-size:12px;cursor:pointer;font-weight:700;font-family:inherit;transition:.15s;white-space:nowrap}
+.btn:hover{border-color:var(--lav2);color:#fff}
+.btn.copied{background:var(--ok);color:#052015;border-color:transparent}
+
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.tog{display:inline-flex;align-items:center;gap:9px;cursor:pointer;user-select:none;
+  border:1px solid var(--line);border-radius:11px;padding:8px 13px;font-size:13px;font-weight:700;color:var(--mut);transition:.15s}
+.tog:hover{color:var(--tx)}
+.tog .bx{width:18px;height:18px;border-radius:6px;border:1.6px solid var(--mut2);display:grid;place-items:center;transition:.15s}
+.tog.on{color:#fff;border-color:transparent}
+.tog.on.img{background:linear-gradient(90deg,rgba(245,177,76,.22),rgba(245,115,46,.18))}
+.tog.on.vid{background:linear-gradient(90deg,rgba(177,75,224,.22),rgba(106,61,232,.18))}
+.tog.on .bx{background:var(--aurora);border-color:transparent}
+.tog .bx svg{opacity:0;transition:.15s}.tog.on .bx svg{opacity:1}
+.note{flex:1;min-width:180px;background:#0B0E1E;border:1px solid var(--line2);color:var(--tx);
+  border-radius:10px;padding:8px 11px;font-size:12.5px;font-family:inherit;outline:none}
+.note:focus{border-color:var(--lav2)}
+.asset{font-size:11.5px;color:var(--mut2);margin-top:10px}
+
+/* empty */
+.empty{border:1px dashed var(--line);border-radius:18px;padding:40px 24px;text-align:center;color:var(--mut);background:rgba(255,255,255,.02)}
+.empty h3{color:var(--tx);font-weight:900;margin:0 0 8px}
+
+/* bottom sticky bar */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:45;
+  background:linear-gradient(180deg,rgba(5,6,14,.4),rgba(5,6,14,.96));backdrop-filter:blur(12px);
+  border-top:1px solid var(--line2)}
+.dock .in{max-width:1160px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center}
+.dock .dprog{flex:1;min-width:0}
+.dock .dprog .t{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-bottom:5px}
+.dock .acts{display:flex;gap:8px}
+.dbtn{border:none;border-radius:11px;padding:10px 15px;font-weight:800;font-size:13px;cursor:pointer;color:#fff;
+  background:var(--aurora);box-shadow:0 6px 20px rgba(224,64,155,.35);font-family:inherit}
+.dbtn.ghost{background:rgba(255,255,255,.06);box-shadow:none;border:1px solid var(--line)}
+
+/* modal */
+.ov{position:fixed;inset:0;z-index:60;background:rgba(3,4,10,.72);backdrop-filter:blur(6px);display:none;
+  align-items:center;justify-content:center;padding:18px}
+.ov.on{display:flex}
+.modal{width:100%;max-width:560px;max-height:86vh;overflow:auto;background:var(--panel);border:1px solid var(--line);
+  border-radius:20px;padding:22px}
+.modal h3{margin:0 0 4px;font-weight:900;font-size:20px}
+.modal p{color:var(--mut);font-size:13px;margin:4px 0 14px}
+.modal textarea{width:100%;min-height:150px;background:#0B0E1E;border:1px solid var(--line2);color:var(--tx);
+  border-radius:12px;padding:12px;font-family:"Space Grotesk",monospace;font-size:12px;outline:none}
+.modal .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.modal .file{border:1px dashed var(--line);border-radius:12px;padding:14px;text-align:center;color:var(--mut);cursor:pointer}
+.schema{background:#0B0E1E;border:1px solid var(--line2);border-radius:10px;padding:12px;font-size:11.5px;
+  color:#C6CBEA;white-space:pre-wrap;font-family:"Space Grotesk",monospace;margin-top:10px}
+.x{margin-left:auto;cursor:pointer;color:var(--mut);font-size:22px;line-height:1}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);z-index:80;background:var(--panel2);
+  border:1px solid var(--line);color:#fff;padding:11px 18px;border-radius:12px;font-size:13px;font-weight:700;
+  opacity:0;pointer-events:none;transition:.25s;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.toast.on{opacity:1;bottom:98px}
+@media(min-width:820px){.grid{grid-template-columns:1fr 1fr}.card.wide{grid-column:1/-1}}
+.foot{color:var(--mut2);font-size:11.5px;text-align:center;padding:26px 0 10px}
+</style>
+</head>
+<body>
+
+<div class="nav"><div class="wrap">
+  <div class="brand"><div class="logo"></div>KOH.journey<span style="color:var(--lav)">-</span>Studio</div>
+  <div class="sp"></div>
+  <div class="meta"><b>MV Production Manager</b><br>画像 → 動画 プロンプト管理</div>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <div class="kick"><span class="dot"></span> 未来へのコンパス · 全二部作プロジェクト</div>
+  <h1>旅を、<br>導いていく。<span class="en">IMAGE → MOTION · A JOURNEY LED BY KOH</span></h1>
+  <p class="sub">一枚の静止画が、物語として動き出す——その道のりを、KOHが旅する人（journey）として歩み、導いていく。シチュエーションも画風も移ろっても、旅路のプロンプトと足跡はすべてここに刻まれる。どの絵を描き、どの動画を紡いだのか。旅の続きは、いつでも辿れる。</p>
+  <div class="ribbon"></div>
+</div></header>
+
+<div class="wrap">
+  <div class="tabs" id="tabs"></div>
+  <div id="view"></div>
+  <div class="foot">KOH.journey-Studio · データはこの端末のブラウザに自動保存されます（localStorage）。バックアップはJSON書出をご利用ください。</div>
+</div>
+
+<!-- dock -->
+<div class="dock"><div class="in">
+  <div class="dprog">
+    <div class="t"><span id="dockLabel">全体の進捗</span><span id="dockPct">0%</span></div>
+    <div class="bar"><i id="dockBar"></i></div>
+  </div>
+  <div class="acts">
+    <button class="dbtn ghost" id="btnImport">読込</button>
+    <button class="dbtn" id="btnExport">JSON書出</button>
+  </div>
+</div></div>
+
+<!-- import modal -->
+<div class="ov" id="ov">
+  <div class="modal">
+    <div style="display:flex;align-items:center"><h3>設計書（JSON）を読み込む</h3><span class="x" id="ovx">×</span></div>
+    <p>新しいバージョン（海外スキルアップ編・帰国後還元編など）のJSONを読み込むと、タブが自動追加されます。同じ id は上書き更新されます。</p>
+    <label class="file" id="fileLbl">📄 JSONファイルを選択（タップ）<input type="file" id="fileIn" accept=".json,application/json" hidden></label>
+    <p style="margin:14px 0 6px">またはJSONを貼り付け：</p>
+    <textarea id="pasteIn" placeholder='{ "id":"v2-skillup", "name":"女性医師 海外スキルアップ編", ... }'></textarea>
+    <div class="row">
+      <button class="dbtn" id="btnDoImport">読み込む</button>
+      <button class="btn" id="btnSchema">スキーマ例を表示</button>
+      <button class="btn" id="btnTemplate">現在の版をひな形として書出</button>
+    </div>
+    <div class="schema" id="schema" style="display:none"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ========================= BUILDING BLOCKS ========================= */
+const STYLE = "Anime / cel-shaded illustration, soft pastel palette, cinematic lighting with gentle lens flare, delicate clean line art, warm and hopeful mood, high detail, 16:9 widescreen.";
+const CHAR = "the same recurring protagonist — a Japanese woman in her late 20s (about 165 cm, slim build); warm medium-brown (chestnut) hair with soft side-parted bangs tied back in a short low ponytail; a soft oval face, warm brown almond-shaped eyes, fair skin, light natural makeup, a gentle intelligent expression and a kind warm smile; keep her facial features perfectly identical in every shot";
+const SCRUBS = "wearing her signature soft lavender (light purple) scrubs — a short-sleeve V-neck top with two front patch pockets and matching lavender trousers, white sneakers, and an ID badge holder with two pens clipped to the left chest pocket";
+const CASUAL = "dressed in tasteful autumn casual wear befitting an off-duty young doctor — a beige trench coat over a soft cream knit, slim trousers and ankle boots, with a small crossbody bag";
+const TOWN = "a charming historic university town in the northeastern United States: grand collegiate-gothic and Victorian red-brick architecture with terracotta ornament and steep gables, a tall clock tower with a green-copper spire and a castle-like crenellated tower, tree-lined stone-paved avenues with golden autumn foliage and scattered fallen leaves, black cast-iron Victorian lampposts, and cozy brick cafe and bookshop storefronts; a pastel sunset sky of soft pink, lavender and peach with prismatic rainbow light rays and gentle lens flare; nostalgic, warm, peaceful academic atmosphere";
+const HOSP = "a state-of-the-art university hospital and advanced medical center: ultra-modern architecture of soaring glass curtain walls and a curved steel-and-glass barrel-vault atrium roof, a light-filled multi-story interior with glass-railed balconies and a glass elevator, polished speckled terrazzo floors, a sleek wood-panel reception, abundant natural light with volumetric sun rays; clean, bright, high-tech and hopeful";
+const WARD="a bright modern inpatient ward with large windows, warm wood accents and sleek vital-sign monitors";
+const REHAB="a bright rehabilitation room with a full glass wall, parallel bars and streaming sunlight";
+const CONF="a high-floor glass conference / reading room with floor-to-ceiling windows overlooking a city skyline at sunset and a wall of high-resolution diagnostic monitors showing MRI brain scans, anatomy diagrams and vital-sign waveforms";
+const OR="an advanced hybrid operating room with large surgical lights, a robotic surgical arm, multiple wall displays and teal surgical drapes behind glass walls";
+const ER="a high-tech emergency and trauma bay at night, advanced monitoring equipment glowing blue, calm-blue and teal lighting";
+const ROOF="the hospital's rooftop terrace overlooking the modern glass buildings and city skyline";
+
+const V1_SCENES = [
+ {id:"S01",time:"0:00",sec:"Intro",env:"空港（出発）",title:"白紙のページに吹く風 ― 出発",
+  lyricJP:"白いページに 風が吹いて / 未来の地図が ほら動き出す",lyricEN:"Wind across an empty page / Something in the future starts to move",
+  desc:"日本を発つ主人公。空港の窓辺で手帳（＝白紙のカルテ／未来の地図）とコンパスを手に。この時だけ旅装。",
+  img:`Cinematic wide establishing shot, 16:9. ${CHAR}, dressed in neat travel clothes (a light coat over a blouse), standing at a large airport departure window at dawn holding a small notebook and a brass compass, a suitcase beside her, planes on the tarmac beyond the glass. A blank notebook page catches soft wind. ${STYLE}`,
+  vid:"Slow push-in toward her at the window; a gentle breeze turns the blank page; soft morning light blooms with drifting lens flare; her hair sways; calm and hopeful.",
+  asset:"新規生成。第二部の帰国シーンと対の構図に。"},
+ {id:"S02",time:"0:15",sec:"Intro→V1",env:"病院アトリウム（到着）",title:"研修先に到着 ― 最先端病院のアトリウム",
+  lyricJP:"迷いながらも 手を伸ばして / コンパスを今 合わせよう",lyricEN:"Hands still searching through the silence / Trying to find a clearer truth",
+  desc:"最先端病院に到着。巨大なガラスのアトリウムに差し込む光。看板『University Hospital / Advanced Medical Center』。（＝参照4枚目）",
+  img:`Cinematic low-angle wide shot, 16:9. ${CHAR}, ${SCRUBS}, walking into ${HOSP}; large signage reads "University Hospital - Advanced Medical Center"; dramatic god-rays pour through the barrel-vault glass roof, long shadows across the terrazzo floor. Awe and quiet determination. ${STYLE}`,
+  vid:"Slow crane-down following her as she steps into the sunlit atrium; god-rays sweep, dust motes float; she looks up at the glass roof; grand and hopeful.",
+  asset:"参照4枚目を元に16:9で再現可。"},
+ {id:"S03",time:"0:30",sec:"Verse 1",env:"病棟ステーション",title:"英語のカルテと向き合う",
+  lyricJP:"カルテの文字に 目をこらす / 「術後一日目」「今夜は経過観察」",lyricEN:'Reading lines across the patient charts / "Post-op day one" "Observation tonight"',
+  desc:"英語の電子カルテを真剣に読み込む。異国での学びの厳しさを提示。",
+  img:`Cinematic medium shot, 16:9. ${CHAR}, ${SCRUBS}, focused at a nurses' station in ${WARD}, reading an English electronic patient chart on a tablet, glowing monitors and sticky notes around her, staff passing in soft blur. Concentrated, slightly overwhelmed. ${STYLE}`,
+  vid:"Subtle rack focus from the glowing tablet to her focused eyes; monitors blink; staff pass in motion blur; she takes a steadying breath.",asset:"新規生成。"},
+ {id:"S04",time:"0:50",sec:"Pre-Chorus",env:"病室（ベッドサイド）",title:"喧噪の奥の笑顔",
+  lyricJP:"それは人の笑顔 / 喧噪の奥で そっと待っている",lyricEN:"The human smile / Waiting underneath the noise",
+  desc:"ベッドサイドで患者と目線を合わせ微笑む。“想いの軌跡”というテーマの核。",
+  img:`Cinematic close-medium shot, 16:9. ${CHAR}, ${SCRUBS}, kneeling gently at a patient's bedside in ${WARD}, warm eye contact and a soft smile, holding the patient's hand, the busy ward softly blurred behind. Tender, warm window light. ${STYLE}`,
+  vid:"Gentle push-in on the shared smile; background noise blurred; warm light rises; a small sincere emotional beat.",asset:"新規生成。"},
+ {id:"S05",time:"1:10",sec:"Chorus 1",env:"リハビリ室",title:"アウトカム＝希望の光 ―「歩けるように」",
+  lyricJP:"アウトカム それは希望の光 / その一歩が 未来を照らす",lyricEN:"Outcome, a light beyond the dark / And suddenly the room begins to glow",
+  desc:"サビの映像的クライマックス。患者が初めての一歩を踏み出し部屋が輝く。サムネイル候補。",
+  img:`Cinematic wide shot, 16:9. ${CHAR}, ${SCRUBS}, supporting a patient taking their first steps between the parallel bars in ${REHAB} flooded with radiant sunlight and gentle lens flare, both faces hopeful, the whole room glowing with warm light. Uplifting, emotional peak. ${STYLE}`,
+  vid:"Slow-motion of the patient's first step; light blooms and fills the room; her encouraging expression; camera slowly rises; triumphant, glowing.",asset:"新規生成。MVの決めカット。",wide:true},
+ {id:"S06",time:"1:35",sec:"Interlude",env:"休日の街（カフェ）",title:"休日 ― 歴史ある大学街のカフェ",
+  lyricJP:"（間奏）",lyricEN:"(Minimal guitar solo, airy textures)",
+  desc:"休日、一息つく主人公。赤レンガの大学街のカフェで医学書とコンパス。私服。（＝参照1・2枚目）",
+  img:`Cinematic medium shot, 16:9. ${CHAR}, ${CASUAL}, sitting at a cozy brick cafe terrace in ${TOWN}, a warm drink and an open medical book on the table with a small brass compass beside it, relaxed and reflective. Peaceful day-off mood. ${STYLE}`,
+  vid:"Very slow push-in; steam rises from the cup; autumn leaves drift past; she turns a page and smiles softly; warm, calm, restful.",asset:"参照1・2枚目の街並みを背景に。私服。"},
+ {id:"S07",time:"1:50",sec:"Verse 2",env:"ガラス回廊",title:"小さな優しさ ― 多国籍チームで働く",
+  lyricJP:"異なる声が ひとつの方向へ / 大切なものを 離さずに",lyricEN:"Different voices, one direction / Holding on to what matters most",
+  desc:"各国から集まった研修医と協働。切磋琢磨しつつ仲良く学ぶ関係性。",
+  img:`Cinematic medium tracking shot, 16:9. ${CHAR}, ${SCRUBS}, walking side by side with a diverse group of international residents (a fair-haired man in green scrubs, a Black woman in blue scrubs) along a bright glass corridor of ${HOSP}, sharing notes and smiling. Collaborative, warm. ${STYLE}`,
+  vid:"Steady tracking alongside the three residents talking and gesturing; sunlight streams through the glass corridor; friendly, energetic camaraderie.",asset:"既存の3人並び画像がほぼ一致。16:9で再生成。"},
+ {id:"S08",time:"2:10",sec:"Pre-Chorus",env:"カンファレンス室",title:"職種を超えたチーム ― カンファレンス",
+  lyricJP:"ドクターも ナースもセラピストも / みんな違っても 心はひとつ",lyricEN:"Doctors, nurses, therapists beside us / Different paths but shared belief",
+  desc:"高層階のガラス張り会議室で多職種・多国籍カンファレンス。主人公が中心。（＝参照3枚目）",
+  img:`Cinematic wide shot, 16:9. ${CHAR}, ${SCRUBS}, standing at the center holding a tablet and leading a discussion with a diverse team of doctors, nurses and therapists around a large table in ${CONF}. Golden sunset light, collaborative and professional. ${STYLE}`,
+  vid:"Slow orbit around the conference table; team members nod and lean in; city sunset glows through the glass; she gestures at the tablet; shared purpose.",asset:"参照3枚目を元に16:9で再生成。"},
+ {id:"S09",time:"2:30",sec:"Chorus 2",env:"ハイブリッド手術室",title:"高度医療の現場 ― チームは道しるべ",
+  lyricJP:"アウトカム それはチームの約束 / 誰が見ても わかるゴール",lyricEN:"A promise made as one / A visible destination line",
+  desc:"救急・高度医療の核心。最先端のハイブリッド手術室でチーム連携。緊張感の中に信頼。",
+  img:`Cinematic dynamic shot, 16:9. ${CHAR}, in a surgical gown, cap and mask with subtle lavender accents, working with a focused diverse team in ${OR}, coordinated around the operating table, teal drapes and blue monitor glow. Intense but controlled, hopeful undertone. ${STYLE}`,
+  vid:"Smooth energetic moves between team members; surgical lights gleam, monitors pulse; she calls out and the team responds in sync; tense, coordinated, resolving to calm.",asset:"新規生成。高度医療のハイライト。"},
+ {id:"S10",time:"2:55",sec:"Bridge",env:"雨の窓辺",title:"計画通りにいかない ― 挫折と気づき",
+  lyricJP:"計画通りに いかなくても / その声が 次のケアになる",lyricEN:"Even when the plan keeps changing / That voice becomes tomorrow's care",
+  desc:"うまくいかない症例。思い悩む横顔、指導医がそっと肩に手を。挫折も気づきのサイン。",
+  img:`Cinematic medium shot, 16:9. ${CHAR}, ${SCRUBS}, standing by a large rain-streaked window of ${HOSP}, a pensive troubled expression, a kind senior physician gently resting a hand on her shoulder in the soft background. Muted blue-grey light with a faint warm glow breaking through. Reflective, emotional. ${STYLE}`,
+  vid:"Slow push-in on her reflective face; raindrops slide down the glass casting moving shadows; the mentor's hand settles on her shoulder; faint warm light grows; melancholy turning hopeful.",asset:"新規生成。物語の感情的谷。"},
+ {id:"S11",time:"3:15",sec:"Breakdown",env:"屋上（夜明け前）",title:"内省と再起 ― 夜明け前",
+  lyricJP:"それは気づきの サイン",lyricEN:"Every setback holds a meaning / Helping us learn what we don't know",
+  desc:"屋上で一人、深呼吸してコンパスを握る。夜明け前の空。再び前を向く決意。",
+  img:`Cinematic close-up, 16:9. ${CHAR}, ${SCRUBS} with a cardigan over her shoulders, on ${ROOF} before dawn, eyes closed taking a deep breath, holding a small brass compass to her chest, the sky deep indigo shifting to soft pink at the horizon. Intimate, resolute, quiet strength. ${STYLE}`,
+  vid:"Extreme slow push-in; her breath faintly visible in cool air; she opens her eyes with new resolve; the horizon slowly brightens; stillness and quiet strength.",asset:"新規生成。"},
+ {id:"S12",time:"3:35",sec:"Final Chorus",env:"病院アトリウム（退院）",title:"退院 ― 共に創る明日",
+  lyricJP:"「退院後も安心だね」と 笑えるまで / 誰かが、ようやく 息をつく",lyricEN:"The future we create together / And someone finally breathes again",
+  desc:"MV最大のカタルシス。回復した患者が家族と再会し、チーム一同で見送る。サムネイル候補。",
+  img:`Cinematic wide shot, 16:9. Bright daytime inside the glass atrium of ${HOSP}. A recovered patient walking out to a joyful family reunion; ${CHAR}, ${SCRUBS}, and the diverse care team smiling and waving farewell together. Sunlight flooding the atrium, celebratory, tearful joy. ${STYLE}`,
+  vid:"Warm dolly-back revealing the whole team waving; the patient turns and bows in thanks; the family embraces; sunlight floods the atrium; joyful, cathartic.",asset:"新規生成。S05の光を回収するカット。",wide:true},
+ {id:"S13",time:"3:55",sec:"Final Chorus",env:"休日の街（仲間と）",title:"知識×優しさ ― 多国籍の絆（休日）",
+  lyricJP:"知識を 優しさで包みながら / 雨の中でも 光るコンパス",lyricEN:"Knowledge wrapped in human kindness / Compass lights inside the rain",
+  desc:"休日、研修仲間たちと達成感を分かち合う。私服で笑い合い肩を組む。国籍を超えた友情。",
+  img:`Cinematic group shot, 16:9. ${CHAR}, ${CASUAL}, together with her diverse international resident friends in autumn casual clothes, laughing and walking arm in arm along a leaf-strewn avenue in ${TOWN} at golden hour. Warm, joyful friendship and mutual respect. ${STYLE}`,
+  vid:"Lively group moment: shared laughter, the camera slowly circles the group; golden light and gentle flare; genuine friendship and shared achievement.",asset:"参照1・2枚目の街並みを背景に。私服のグループ。"},
+ {id:"S14",time:"4:15",sec:"Outro",env:"屋上（夜明け）",title:"コンパスと日本の夜明け ― 第二部への伏線",
+  lyricJP:"コンパスを 信じて / 夜の向こうに 明日が待っている",lyricEN:"Trust the compass / Tomorrow waits beyond the night",
+  desc:"第一部の締めであり第二部への伏線。東＝日本の夜明けを見つめる。針が前を指し、空に淡く日本列島。",
+  img:`Cinematic epic wide shot, 16:9. ${CHAR}, ${SCRUBS}, on ${ROOF} at sunrise, seen from behind and side, gazing east toward a radiant dawn, holding a brass compass whose needle points forward; a faint translucent silhouette of the Japanese archipelago glows softly in the sky. Hopeful, cinematic, a sense of a journey continuing. ${STYLE}`,
+  vid:"Grand slow crane-up behind her as the sun breaks the horizon; the compass needle steadies; the faint map silhouette shimmers and fades; her ponytail lifts in the wind; expansive, to-be-continued.",asset:"新規生成。第二部と対になる決めカット。",wide:true},
+];
+const V1_BLOCKS = [
+ {g:"キャラクター",bt:"CHARACTER（顔・髪・体型 / 変更禁止）",bx:CHAR+"."},
+ {g:"キャラクター",bt:"STYLE（画風 / 全カット共通）",bx:STYLE},
+ {g:"服装",bt:"A. 勤務・基本（薄紫スクラブ）",bx:SCRUBS+"."},
+ {g:"服装",bt:"B. 手術・救急（OR/ER）",bx:"in a surgical gown, cap and mask with subtle lavender accents (or teal surgical scrubs); keep her face identifiable above the mask."},
+ {g:"服装",bt:"C. カンファレンス・回診（白衣）",bx:"her lavender scrubs with a clean white coat over them, a stethoscope around her neck and the ID badge on the coat."},
+ {g:"服装",bt:"D. 休日・私服（秋の上品カジュアル）",bx:CASUAL+"."},
+ {g:"街並み（休日）",bt:"TOWN（参照1・2枚目）",bx:"Set in "+TOWN+"."},
+ {g:"病院（研修）",bt:"HOSPITAL ベース（参照3・4枚目）",bx:"Set inside "+HOSP+"."},
+ {g:"病院（研修）",bt:"アトリウム／ロビー",bx:'the soaring glass atrium with a barrel-vault steel-and-glass roof, god-rays over a terrazzo floor, and signage "University Hospital - Advanced Medical Center".'},
+ {g:"病院（研修）",bt:"病棟／病室",bx:WARD+"."},
+ {g:"病院（研修）",bt:"カンファレンス／読影室",bx:CONF+"."},
+ {g:"病院（研修）",bt:"ハイブリッド手術室",bx:OR+"."},
+ {g:"病院（研修）",bt:"救急・ICU",bx:ER+"."},
+ {g:"病院（研修）",bt:"リハビリ室",bx:REHAB+"."},
+ {g:"病院（研修）",bt:"屋上テラス",bx:ROOF+"."},
+];
+
+const DEFAULT_DATA = {
+  project:"Compass for Tomorrow / 未来へのコンパス",
+  versions:[
+    {id:"v1-overseas-training",name:"女性医師 海外研修編",part:"PART 1 · 海外研修",
+     desc:"日本からアメリカへ渡り救急医療・高度医療を学ぶ第一部。学びと成長が主軸。",
+     blocks:V1_BLOCKS,scenes:V1_SCENES},
+    {id:"v2-skillup",name:"女性医師 海外スキルアップ編",part:"PART · 予定",
+     desc:"（未投入）海外での更なるスキルアップ編。JSONを読み込むとここに追加されます。",blocks:[],scenes:[]},
+    {id:"v3-return-japan",name:"帰国後 日本の医療機関へ還元編",part:"PART 2 · 予定",
+     desc:"（未投入）学びを日本へ還元する第二部。JSONを読み込むとここに追加されます。",blocks:[],scenes:[]},
+  ]
+};
+
+/* ========================= STATE ========================= */
+const LS_PROG="cft_progress_v1", LS_IMP="cft_imported_v1", LS_ACT="cft_active_v1";
+let progress = load(LS_PROG,{});
+let imported = load(LS_IMP,[]);           // extra/override versions
+let active = localStorage.getItem(LS_ACT)||"v1-overseas-training";
+let filter="all", query="";
+
+function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+
+function versions(){
+  const map={}; DEFAULT_DATA.versions.forEach(v=>map[v.id]=v);
+  imported.forEach(v=>map[v.id]=v);       // imported overrides/add
+  return Object.values(map);
+}
+function getV(id){return versions().find(v=>v.id===id)}
+function prog(vid,sid){return (progress[vid]&&progress[vid][sid])||{img:false,vid:false,note:""}}
+function setProg(vid,sid,patch){progress[vid]=progress[vid]||{};progress[vid][sid]={...prog(vid,sid),...patch};save(LS_PROG,progress)}
+
+/* ========================= RENDER ========================= */
+const $=s=>document.querySelector(s), el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function counts(v){let i=0,d=0,done=0;v.scenes.forEach(s=>{const p=prog(v.id,s.id);if(p.img)i++;if(p.vid)d++;if(p.img&&p.vid)done++});return{i,d,done,n:v.scenes.length}}
+
+function renderTabs(){
+  const t=$("#tabs");t.innerHTML="";
+  versions().forEach(v=>{
+    const c=counts(v);
+    const b=el("button","tab"+(v.id===active?" on":""));
+    b.innerHTML=`${esc(v.name)} <span class="cnt">${c.done}/${c.n||0}</span>`;
+    b.onclick=()=>{active=v.id;localStorage.setItem(LS_ACT,active);render()};
+    t.appendChild(b);
+  });
+  const add=el("button","tab add","＋ 版を読込");add.onclick=openImport;t.appendChild(add);
+}
+
+function renderView(){
+  const v=getV(active)||versions()[0];
+  const view=$("#view");view.innerHTML="";
+
+  const head=el("div","vhead");
+  head.innerHTML=`<div><div class="vpart">${esc(v.part||"")}</div><div class="vt">${esc(v.name)}</div><div class="vd">${esc(v.desc||"")}</div></div>`;
+  view.appendChild(head);
+
+  if(!v.scenes.length){
+    const e=el("div","empty",`<h3>まだシーンが未投入です</h3><p>この版のプロンプト設計書（JSON）を読み込むと、シーンのチェックリストがここに並びます。</p>`);
+    const btn=el("button","dbtn","JSONを読み込む");btn.style.marginTop="14px";btn.onclick=openImport;e.appendChild(btn);
+    view.appendChild(e);
+    updateDock(v);return;
+  }
+
+  // progress cards
+  const c=counts(v);
+  const prc=el("div","prog");
+  prc.innerHTML=`
+    <div class="pcard"><div class="pt"><span>画像 生成済</span><b>${c.i}/${c.n}</b></div><div class="bar"><i style="width:${pct(c.i,c.n)}%"></i></div></div>
+    <div class="pcard"><div class="pt"><span>動画 生成済</span><b>${c.d}/${c.n}</b></div><div class="bar"><i style="width:${pct(c.d,c.n)}%"></i></div></div>
+    <div class="pcard"><div class="pt"><span>完成（画像+動画）</span><b>${c.done}/${c.n}</b></div><div class="bar"><i style="width:${pct(c.done,c.n)}%"></i></div></div>`;
+  view.appendChild(prc);
+
+  // settings accordion
+  if(v.blocks&&v.blocks.length){
+    const acc=el("details","acc");
+    acc.innerHTML=`<summary>🎛️ 設定資料（固定ブロック）<span class="caret">›</span></summary>`;
+    const body=el("div","body");
+    const groups={};v.blocks.forEach(b=>{(groups[b.g]=groups[b.g]||[]).push(b)});
+    Object.keys(groups).forEach(g=>{
+      body.appendChild(el("div","lbl",esc(g)));
+      groups[g].forEach(b=>{
+        const bl=el("div","block");
+        bl.innerHTML=`<div class="bh"><span class="bt">${esc(b.bt)}</span></div><div class="bx">${esc(b.bx)}</div>`;
+        const cp=el("button","btn","コピー");cp.style.marginTop="8px";cp.onclick=()=>copy(cp,b.bx);
+        bl.appendChild(cp);body.appendChild(bl);
+      });
+    });
+    acc.appendChild(body);view.appendChild(acc);
+  }
+
+  // toolbar
+  const tb=el("div","toolbar");
+  tb.innerHTML=`<div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA0BC" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+    <input id="q" placeholder="シーン・歌詞・環境で検索" value="${esc(query)}"></div>
+    <div class="filters">
+      ${["all|すべて","todo|未着手","img|画像のみ","done|完成"].map(f=>{const[k,l]=f.split("|");return `<button class="chip${filter===k?' on':''}" data-f="${k}">${l}</button>`}).join("")}
+    </div>`;
+  view.appendChild(tb);
+  $("#q").oninput=e=>{query=e.target.value;renderScenes(v)};
+  tb.querySelectorAll(".chip").forEach(ch=>ch.onclick=()=>{filter=ch.dataset.f;renderScenes(v)});
+
+  const grid=el("div","grid");grid.id="grid";view.appendChild(grid);
+  renderScenes(v);
+  updateDock(v);
+}
+
+function match(v,s){
+  const p=prog(v.id,s.id);
+  if(filter==="todo"&&(p.img||p.vid))return false;
+  if(filter==="img"&&!(p.img&&!p.vid))return false;
+  if(filter==="done"&&!(p.img&&p.vid))return false;
+  if(query){const q=query.toLowerCase();const hay=(s.id+s.title+s.env+s.lyricJP+s.lyricEN+s.sec).toLowerCase();if(!hay.includes(q))return false}
+  return true;
+}
+
+function renderScenes(v){
+  const grid=$("#grid");if(!grid)return;grid.innerHTML="";
+  const list=v.scenes.filter(s=>match(v,s));
+  if(!list.length){grid.appendChild(el("div","empty","<p>該当するシーンがありません。</p>"));return}
+  list.forEach(s=>{
+    const p=prog(v.id,s.id);
+    const state=p.img&&p.vid?"done":(p.img||p.vid?"half":"");
+    const dotc=state==="done"?"var(--ok)":(state==="half"?"var(--warn)":"var(--mut2)");
+    const card=el("div","card "+state+(s.wide?" wide":""));
+    card.innerHTML=`
+      <div class="stripe"></div>
+      <div class="ch">
+        <div class="sid">${esc(s.id)}</div>
+        <div class="chtitle">
+          <div class="tt">${esc(s.title)}</div>
+          <div class="mt"><span class="statedot" style="background:${dotc}"></span>${esc(s.time)} · ${esc(s.sec)} <span class="envtag">${esc(s.env)}</span></div>
+        </div>
+      </div>
+      <div class="cbody">
+        <div class="lyric">${esc(s.lyricJP)}<br><span class="en">${esc(s.lyricEN)}</span></div>
+        <div class="desc">${esc(s.desc)}</div>
+        <div class="pbox">
+          <div class="ph"><span class="tag img">Image · Firefly / Gemini</span><button class="btn copy" data-t="img">コピー</button></div>
+          <pre>${esc(s.img)}</pre>
+        </div>
+        <div class="pbox">
+          <div class="ph"><span class="tag vid">Video · KlingAI (motion)</span><button class="btn copy" data-t="vid">コピー</button></div>
+          <pre>${esc(s.vid)}</pre>
+        </div>
+        <div class="controls">
+          <div class="tog img${p.img?' on':''}" data-k="img"><span class="bx">${check()}</span>画像 生成済</div>
+          <div class="tog vid${p.vid?' on':''}" data-k="vid"><span class="bx">${check()}</span>動画 生成済</div>
+          <input class="note" placeholder="メモ（シード値・採用テイク・URLなど）" value="${esc(p.note)}">
+        </div>
+        <div class="asset">📌 ${esc(s.asset||"")}</div>
+      </div>`;
+    // copy buttons
+    card.querySelectorAll(".copy").forEach(btn=>btn.onclick=()=>copy(btn, btn.dataset.t==="img"?s.img:s.vid));
+    // toggles
+    card.querySelectorAll(".tog").forEach(tg=>tg.onclick=()=>{
+      const k=tg.dataset.k;const cur=prog(v.id,s.id)[k];setProg(v.id,s.id,{[k]:!cur});renderScenes(v);renderTabs();updateDock(v)});
+    // note
+    const nt=card.querySelector(".note");let tmr;nt.oninput=()=>{clearTimeout(tmr);tmr=setTimeout(()=>setProg(v.id,s.id,{note:nt.value}),400)};
+    grid.appendChild(card);
+  });
+}
+function check(){return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A0714" stroke-width="3.4"><path d="M20 6L9 17l-5-5"/></svg>'}
+function pct(a,b){return b?Math.round(a/b*100):0}
+
+function updateDock(v){
+  const c=counts(v);const total=c.n*2, got=c.i+c.d;const p=pct(got,total);
+  $("#dockLabel").textContent=v.name+" の進捗";
+  $("#dockPct").textContent=p+"%";
+  $("#dockBar").style.width=p+"%";
+}
+
+/* ========================= COPY / TOAST ========================= */
+function copy(btn,text){
+  const done=()=>{const o=btn.textContent;btn.textContent="コピー済";btn.classList.add("copied");toast("プロンプトをコピーしました");setTimeout(()=>{btn.textContent=o;btn.classList.remove("copied")},1400)};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(()=>fallback(text,done))}
+  else fallback(text,done);
+}
+function fallback(text,cb){const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}document.body.removeChild(ta);cb&&cb()}
+let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1600)}
+
+/* ========================= IMPORT / EXPORT ========================= */
+function openImport(){$("#ov").classList.add("on")}
+function closeImport(){$("#ov").classList.remove("on");$("#schema").style.display="none";$("#pasteIn").value=""}
+$("#ovx").onclick=closeImport;$("#ov").onclick=e=>{if(e.target.id==="ov")closeImport()};
+$("#btnImport").onclick=openImport;
+$("#fileLbl").onclick=()=>$("#fileIn").click();
+$("#fileIn").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>doImport(r.result);r.readAsText(f)};
+$("#btnDoImport").onclick=()=>{const t=$("#pasteIn").value.trim();if(!t){toast("JSONを貼り付けるかファイルを選択してください");return}doImport(t)};
+$("#btnSchema").onclick=()=>{const s=$("#schema");s.style.display=s.style.display==="none"?"block":"none";s.textContent=SCHEMA};
+$("#btnTemplate").onclick=()=>download("compass_template_"+active+".json",JSON.stringify(getV(active),null,2));
+$("#btnExport").onclick=()=>{
+  const payload={project:DEFAULT_DATA.project,exportedAt:new Date().toISOString(),
+    active:getV(active),progress:progress};
+  download("compass_studio_backup.json",JSON.stringify(payload,null,2));
+  toast("バックアップを書き出しました");
+};
+
+function normalize(obj){
+  // accept: single version, {versions:[...]}, or backup {active:{...}}
+  let vers=[];
+  if(Array.isArray(obj))vers=obj;
+  else if(obj.versions&&Array.isArray(obj.versions))vers=obj.versions;
+  else if(obj.active&&obj.active.id)vers=[obj.active];
+  else if(obj.id&&obj.scenes)vers=[obj];
+  else throw new Error("形式を認識できません");
+  vers.forEach(v=>{if(!v.id||!v.name)throw new Error("id と name は必須です");v.scenes=v.scenes||[];v.blocks=v.blocks||[]});
+  return vers;
+}
+function doImport(text){
+  let obj;try{obj=JSON.parse(text)}catch(e){toast("JSONの解析に失敗しました");return}
+  let vers;try{vers=normalize(obj)}catch(e){toast(e.message);return}
+  vers.forEach(nv=>{const i=imported.findIndex(x=>x.id===nv.id);if(i>=0)imported[i]=nv;else imported.push(nv)});
+  if(obj.progress&&typeof obj.progress==="object"){progress={...progress,...obj.progress};save(LS_PROG,progress)}
+  save(LS_IMP,imported);
+  active=vers[0].id;localStorage.setItem(LS_ACT,active);
+  closeImport();render();toast(vers.length+"件のバージョンを読み込みました");
+}
+function download(name,text){const b=new Blob([text],{type:"application/json"});const u=URL.createObjectURL(b);
+  const a=document.createElement("a");a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+
+const SCHEMA = `{
+  "id": "v2-skillup",
+  "name": "女性医師 海外スキルアップ編",
+  "part": "PART · 海外スキルアップ",
+  "desc": "一行の説明",
+  "blocks": [
+    { "g":"キャラクター", "bt":"CHARACTER", "bx":"英語の固定ブロック本文" }
+  ],
+  "scenes": [
+    {
+      "id":"S01", "time":"0:00", "sec":"Intro", "env":"環境ラベル",
+      "title":"シーン名",
+      "lyricJP":"日本語歌詞", "lyricEN":"English lyric",
+      "desc":"日本語のシーン解説",
+      "img":"（英語）Fireflyの画像プロンプト全文",
+      "vid":"（英語）Klingのモーションプロンプト全文",
+      "asset":"制作メモ", "wide": false
+    }
+  ]
+}`;
+
+/* ========================= INIT ========================= */
+function render(){renderTabs();renderView()}
+render();
+</script>
+</body>
+</html>
